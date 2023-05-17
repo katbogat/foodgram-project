@@ -1,12 +1,17 @@
 version: '3.3'
 services:
 
+  # тут вы опишите еще 2 контейнера: db и web
+
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
+    # depends_on:
+      # - web
+
   nginx:
     image: nginx:1.19.3
     ports:
@@ -16,3 +21,12 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
       - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
+    restart: always
+    depends_on:
+      - frontend
+
+volumes:
+  static_value:
+  media_value:
